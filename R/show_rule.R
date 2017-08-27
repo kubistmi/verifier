@@ -30,6 +30,6 @@ show_rule <- function(name, all = TRUE){
       if(all){
             return(rule_set)
       } else{
-            return(rule_set[rule_set$name == name])
+            return(rule_set[rule_set$name %in% name])
       }
 }

@@ -19,6 +19,10 @@
 #' update_rule(name = "test1", update = c(x = "mtcars$cyl", type = "def"))
 #' }
 update_rule <- function(name, update){
+      if(length(name)>1){
+            stop("Can update only one rule at a time.")
+      }
+
       rule_set <- local(env = .verifier, rule_set)
 
       rule_set[rule_set$name == name, names(update)] <- update
