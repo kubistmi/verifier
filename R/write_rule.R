@@ -4,7 +4,7 @@
 #' \code{write_rule} is a function to help you write new rules. Can write several rules at once using vectors.
 #'
 #' @usage
-#' write_rule(name, x, type, y, def , result, other)
+#' write_rule(name, x, type, y, def , result, na.rm = "")
 #'
 #' @param name character. Name of the rule. Needs to be unique for every rule.
 #'
@@ -15,7 +15,6 @@
 #'  \item{\code{integ} checks for presence of all unique values of x in y}
 #'  \item{\code{summary} checks summarised data against original, more detailed data}
 #'  \item{\code{na} checks the missing values}
-#'  \item{\code{numeric} checks outlying (user defined) numeric values}
 #'  \item{\code{def} any other type, needs to be defined in def parametr}.
 #'}
 #' @param y vector. Used in \code{type} \code{integrity} (y is the reference table) or
@@ -25,7 +24,7 @@
 #'
 #' @param result numeric. Used for \code{type} \code{numeric} or \code{def} to specify bounds or expected value.
 #'
-#' @param other character. Used to specify other arguments passed into the user defined function, e.g. "na.rm = T".
+#' @param na.rm logical or empty (""). Should the \code{NA} values be ommitted in computations of summaries and user defined functions? Empty, if user defined function does not use na.rm argument.
 #'
 #' @details You can create several rules at once assigning vectors into the parametrs. When the \code{length} of any parameter is longer than one the function uses cbind to create a data.frame (will repeat values of vectors with smaller size). Names of the rules need to be unique.
 #'
@@ -36,7 +35,7 @@
 #' @examples
 #' \dontrun{
 #' write_rule(name = "test1", x = mtcars$mpg, type = "def", def = c("mean", "median"),
-#'            result = 19.2, other ="na.rm = T")
+#'            result = 19.2, na.rm = TRUE)
 #' # verify, that the mean and median of mtcars$mpg is 19.2, omitting the missing values
 #'
 #' write_rule(name = "integrity1", x = data$cities, type = "integ", y = "ref$cities")
@@ -44,10 +43,16 @@
 #'
 #' }
 
-write_rule <- function(name, x, type, y = "", def = "",
-                       result = "", other = ""){
+write_rule <- function(name, x, type, y = NULL, def = "",
+                       result = "", na.rm = ""){
 
-      x<- deparse(substitute(x))
+      x <- deparse(substitute(x))
+
+      if(!is.null(y)){
+            y <- deparse(substitute(y))
+      } else{
+            y <- ""
+      }
 
       unNames <- c(local(env = .verifier, rule_set$name), name)
       # make table
@@ -56,12 +61,12 @@ write_rule <- function(name, x, type, y = "", def = "",
       }
 
       maxlen <- max(length(x), length(type), length(def),
-          length(result), length(other))
+          length(result), length(na.rm))
 
       if(maxlen > 1){
-            nrule <- cbind(name, x, type, y, def, result, other)
+            nrule <- cbind(name, x, type, y, def, result, na.rm)
       } else{
-            nrule <- c(name, x, type, y, def, result, other)
+            nrule <- c(name, x, type, y, def, result, na.rm)
       }
 
       # check type and if type = def, then def ....
