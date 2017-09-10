@@ -10,6 +10,8 @@
 #'
 #' @param update character. Named vector with parameters as names containing updated parameters.
 #'
+#' @details For more details on format of rules please go to \code{\link{write_rule}}.
+#'
 #' @return Return a message confirming the update of specified rule.
 #'
 #' @author Michal Kubista

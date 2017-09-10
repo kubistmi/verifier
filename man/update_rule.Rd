@@ -17,6 +17,9 @@ Return a message confirming the update of specified rule.
 \description{
 \code{update_rule} is a function to update the existing rules. Can update several arguments for a single rule.
 }
+\details{
+For more details on format of rules please go to \code{\link{write_rule}}.
+}
 \examples{
 \dontrun{
 update_rule(name = "test1", update = c(x = "mtcars$cyl", type = "def"))

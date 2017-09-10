@@ -1,6 +1,31 @@
+#' @title Verifies specfified rules
+#'
+#' @description
+#' \code{verify} is a function used to verify your defined rules. Can verify several rules at once.
+#'
+#' @usage
+#' verify(name, all = FALSE)
+#'
+#' @param name character. Specified name/s of the rule to be removed.
+#'
+#' @param all logical. Should all the rules be removed?
+#'
+#' @details If all = TRUE is used, the name parametr name will not be evaluated at all.
+#'
+#' @return Returns a list of two objects:
+#' \itemize{
+#' \item{rules} table of all verified rules and results of the verification
+#' \item{unsolved} list of vectors/tables, containing problematic values, or their row_indexes (rulename_index)
+#' }
+#'
+#' @author Michal Kubista
+#'
+#' @examples
+#' \dontrun{
+#' verify(name = c("a", "b"))
+#' verify(all = TRUE)
+#' }
 verify <- function(name, all = FALSE){
-      require(data.table)
-      require(dplyr)
 
       rule_set <- local(envir = .verifier, rule_set)
 
@@ -36,13 +61,41 @@ verify <- function(name, all = FALSE){
             if(rule$type == "summary"){
                   x <- as.data.table(x)
 
+                  if(sum(c("id","value") %in% colnames(x))==2){
+                        x <- x[,c("id","value")]
+                  } else if(ncol(x)==2){
+                        colnames(x) <- c("id","value")
+                  } else{
+                        stop("x needs to be a data.frame/table object either with columns 'id' and 'value', or with two columns only (in this case, first column is expected to be id and second to contain value")
+                  }
+
                   fn <- get(rule$def)
 
-                  agX <- x[,.(value = fn(value, na.rm = rule$na.rm)), by = id]
+                  if (rule$na.rm == "") {
+                        agX <-
+                              x[,.(
+                                    value = fn(value)
+                              ), by = id]
+
+                  } else {
+                        agX <-
+                              x[,.(
+                                    value = fn(value, na.rm = as.logical(rule$na.rm))
+                              ), by = id]
+                  }
 
                   y <- as.data.table(eval(parse(text = rule$y)))
 
-                  xy <- full_join(agX, y, by = "id")
+                  if (sum(c("id","value") %in% colnames(y)) == 2) {
+                        y <- y[,c("id","value")]
+                  } else if(ncol(y) == 2) {
+                        colnames(y) <- c("id","value")
+                  } else{
+                        stop("y needs to be a data.frame/table object either with columns 'id' and 'value', or with two columns only (in this case, first column is expected to be id and second to contain value")
+                  }
+
+                  xy <- merge(agX, y, by = "id")
+
                   xy$diff <- abs(xy$value.x - xy$value.y)
 
                   e <- sum(xy$diff == 0)
@@ -71,7 +124,7 @@ verify <- function(name, all = FALSE){
                         if(rule$na.rm == ""){
                               defX <- fn(x)
                         } else{
-                              defX <- fn(x, na.rm = rule$na.rm)
+                              defX <- fn(x, na.rm = as.logical(rule$na.rm))
                         }
                   } else {
                         y <- eval(parse(text = rule$y))
@@ -79,7 +132,7 @@ verify <- function(name, all = FALSE){
                         if(rule$na.rm == ""){
                               defX <- fn(x, y)
                         } else{
-                              defX <- fn(x, y, na.rm = rule$na.rm)
+                              defX <- fn(x, y, na.rm = as.logical(rule$na.rm))
                         }
                   }
 
@@ -111,10 +164,6 @@ verify <- function(name, all = FALSE){
 
       }
       return(list(rules = df, unsolved = unsolved))
-}
-
-smaller_than<- function(x, y, na.rm = ){
-      x < y
 }
 
 #####################################

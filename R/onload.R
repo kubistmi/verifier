@@ -11,4 +11,6 @@
       local(env=.verifier, {
             set_names <- c("name", "x", "type", "y", "def", "result", "na.rm")
       })
+
+      suppressPackageStartupMessages(require("data.table"))
 }

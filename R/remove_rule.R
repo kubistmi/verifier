@@ -6,7 +6,7 @@
 #' @usage
 #' update_rule(name, all = FALSE)
 #'
-#' @param name character. Specified name of the rule to be removed
+#' @param name character. Specified name/s of the rule to be removed.
 #'
 #' @param all logical. Should all the rules be removed?
 #'

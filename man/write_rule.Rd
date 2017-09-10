@@ -4,7 +4,7 @@
 \alias{write_rule}
 \title{Write new rule to be verified.}
 \usage{
-write_rule(name, x, type, y, def , result, other)
+write_rule(name, x, type, y, def , result, na.rm = "")
 }
 \arguments{
 \item{name}{character. Name of the rule. Needs to be unique for every rule.}
@@ -16,18 +16,17 @@ write_rule(name, x, type, y, def , result, other)
  \item{\code{integ} checks for presence of all unique values of x in y}
  \item{\code{summary} checks summarised data against original, more detailed data}
  \item{\code{na} checks the missing values}
- \item{\code{numeric} checks outlying (user defined) numeric values}
  \item{\code{def} any other type, needs to be defined in def parametr}.
 }}
 
-\item{y}{vector. Used in \code{type} \code{integrity} (y is the reference table) or
-\code{summary} (y is the summarised table).}
+\item{y}{vector. Used in \code{type} \code{integrity} (y is the reference table),
+\code{summary} (y is the summarised table), or in some cases of \code{def}.}
 
 \item{def}{character. Used for user defined rules using any function in evnironment, accepts only he name of the function, e.g. "sum".}
 
 \item{result}{numeric. Used for \code{type} \code{numeric} or \code{def} to specify bounds or expected value.}
 
-\item{other}{character. Used to specify other arguments passed into the user defined function, e.g. "na.rm = T".}
+\item{na.rm}{logical or empty (""). Should the \code{NA} values be ommitted in computations of summaries and user defined functions? Empty, if the function does not use na.rm argument (or it should use default value).}
 }
 \value{
 Returns a message confirming the creation of new rule.
@@ -36,12 +35,17 @@ Returns a message confirming the creation of new rule.
 \code{write_rule} is a function to help you write new rules. Can write several rules at once using vectors.
 }
 \details{
-You can create several rules at once assigning vectors into the parametrs. When the \code{length} of any parameter is longer than one the function uses cbind to create a data.frame (will repeat values of vectors with smaller size). Names of the rules need to be unique.
+You can create several rules at once assigning vectors into the parametrs. When the \code{length} of any parameter is longer than one the function uses cbind to create a data.frame (will repeat values of vectors with smaller size). Names of the rules need to be unique. \cr
+Special requirements:
+\itemize{
+ \item{\code{summary} Both \code{x} and \code{y} are expected to be a data.frame/table object either with columns 'id' and 'value', or with two columns only (in this case, first column is expected to be id and second to contain value)}.
+ \item{\code{def} The defined function must have a name (you cannot use operators such as \code{<}). If you want to use two parameters (not only \code{x}) in the function (such as rewriting operator as named function \code{function(a,b){a < b}}), then you need to specify the other parameter as \code{y}. If you want to compare a result of a function with some predefined value (suck as \code{mean(x) == number}), you need to specify the parameter \code{result} as this \code{number}. If the function output is vector with lenght > 1, it is expected to contain logical values and will be summarized (not compared with parameter \code{result}) for the final output.}
+}
 }
 \examples{
 \dontrun{
 write_rule(name = "test1", x = mtcars$mpg, type = "def", def = c("mean", "median"),
-           result = 19.2, other ="na.rm = T")
+           result = 19.2, na.rm = TRUE)
 # verify, that the mean and median of mtcars$mpg is 19.2, omitting the missing values
 
 write_rule(name = "integrity1", x = data$cities, type = "integ", y = "ref$cities")
