@@ -25,7 +25,7 @@ update_rule <- function(name, update){
             stop("Can update only one rule at a time.")
       }
 
-      rule_set <- local(env = .verifier, rule_set)
+      rule_set <- local(envir = .verifier, rule_set)
 
       rule_set[rule_set$name == name, names(update)] <- update
 

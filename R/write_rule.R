@@ -58,7 +58,7 @@ write_rule <- function(name, x, type, y = NULL, def = "",
             y <- ""
       }
 
-      unNames <- c(local(env = .verifier, rule_set$name), name)
+      unNames <- c(local(envir = .verifier, rule_set$name), name)
       # make table
       if(length(unNames) > length(unique(unNames))){
             stop("You need to provide unique names for your rules")
@@ -74,10 +74,10 @@ write_rule <- function(name, x, type, y = NULL, def = "",
       }
 
       # rbind table
-      assign("rule_set", rbind(local(env = .verifier, rule_set), nrule, stringsAsFactors = F),
+      assign("rule_set", rbind(local(envir = .verifier, rule_set), nrule, stringsAsFactors = F),
              envir = .verifier)
 
-      local(env= .verifier, colnames(rule_set) <- set_names)
+      local(envir= .verifier, colnames(rule_set) <- set_names)
 
       return(print(paste("New rule(s)", name ,"created")))
 }

@@ -4,7 +4,7 @@
 \alias{remove_rule}
 \title{Removes an existing rule}
 \usage{
-update_rule(name, all = FALSE)
+remove_rule(name, all = FALSE)
 }
 \arguments{
 \item{name}{character. Specified name/s of the rule to be removed.}
@@ -15,7 +15,7 @@ update_rule(name, all = FALSE)
 Return a message confirming the removal.
 }
 \description{
-\code{update_rule} is a function to removes the existing rules. Can remove several rules at once.
+\code{remove_rule} is a function to removes the existing rules. Can remove several rules at once.
 }
 \details{
 If all = TRUE is used, the name parametr name will not be evaluated at all.

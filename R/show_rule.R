@@ -25,7 +25,8 @@
 #' # show all rules, equivalent to show_rule(all= TRUE)
 #' }
 show_rule <- function(name, all = TRUE){
-      rule_set <- local(env = .verifier, rule_set)
+
+      rule_set <- local(envir = .verifier, rule_set)
 
       if(all){
             return(rule_set)

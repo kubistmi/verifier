@@ -1,10 +1,10 @@
 #' @title Removes an existing rule
 #'
 #' @description
-#' \code{update_rule} is a function to removes the existing rules. Can remove several rules at once.
+#' \code{remove_rule} is a function to removes the existing rules. Can remove several rules at once.
 #'
 #' @usage
-#' update_rule(name, all = FALSE)
+#' remove_rule(name, all = FALSE)
 #'
 #' @param name character. Specified name/s of the rule to be removed.
 #'
@@ -25,10 +25,10 @@
 #' # removes all rules
 #' }
 remove_rule <- function(name, all = FALSE){
-      rule_set <- local(env = .verifier, rule_set)
+      rule_set <- local(envir = .verifier, rule_set)
 
       if(all){
-            local(env=.verifier, {
+            local(envir =.verifier, {
                   rule_set <- data.frame(name = character(), x = character(),
                                          type = character(), y = character(),
                                          def = character(), result = character(),

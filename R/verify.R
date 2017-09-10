@@ -26,6 +26,7 @@
 #' verify(all = TRUE)
 #' }
 verify <- function(name, all = FALSE){
+      suppressPackageStartupMessages(require("data.table"))
 
       rule_set <- local(envir = .verifier, rule_set)
 
@@ -165,7 +166,3 @@ verify <- function(name, all = FALSE){
       }
       return(list(rules = df, unsolved = unsolved))
 }
-
-#####################################
-#### CHECK OTHER -> NA.RM FUCKUP ####
-#####################################
