@@ -20,7 +20,7 @@
 #' @param y vector. Used in \code{type} \code{integrity} (y is the reference table),
 #' \code{summary} (y is the summarised table), or in some cases of \code{def}.
 #'
-#' @param def character. Used for user defined rules using any function in evnironment, accepts only he name of the function, e.g. "sum".
+#' @param def character. Used for user defined rules using any function in environment, accepts only the name of the function, e.g. "sum" or accuracy for \code{summary} check, e.g. "1e-2".
 #'
 #' @param result numeric. Used for \code{type} \code{numeric} or \code{def} to specify bounds or expected value.
 #'
@@ -30,7 +30,7 @@
 #' Special requirements:
 #'\itemize{
 #'  \item{\code{summary} Both \code{x} and \code{y} are expected to be a data.frame/table object either with columns 'id' and 'value', or with two columns only (in this case, first column is expected to be id and second to contain value)}.
-#'  \item{\code{def} The defined function must have a name (you cannot use operators such as \code{<}). If you want to use two parameters (not only \code{x}) in the function (such as rewriting operator as named function \code{function(a,b){a < b}}), then you need to specify the other parameter as \code{y}. If you want to compare a result of a function with some predefined value (suck as \code{mean(x) == number}), you need to specify the parameter \code{result} as this \code{number}. If the function output is vector with lenght > 1, it is expected to contain logical values and will be summarized (not compared with parameter \code{result}) for the final output.}
+#'  \item{\code{def} The defined function must have a name (you cannot use operators such as \code{<}). If you want to use two parameters (not only \code{x}) in the function (such as rewriting operator as named function \code{function(a,b){a < b}}), then you need to specify the other parameter as \code{y}. If you want to compare a result of a function with some predefined value (suck as \code{mean(x) == number}), you need to specify the parameter \code{result} as this \code{number}. If the function output is vector with lenght > 1, it is expected to contain logical values and will be summarized (not compared with parameter \code{result}) for the final output.}. \strong{ There is a special use of \code{def} in case of \code{type = summary}, in this case \code{def} can be used to define accuracy (tolerance of difference between values). Default tolerance is 0 (comparing using \code{==}.)}
 #'}
 #' @return Returns a message confirming the creation of new rule.
 #'
@@ -43,12 +43,15 @@
 #' # verify, that the mean and median of mtcars$mpg is 19.2, omitting the missing values
 #'
 #' write_rule(name = "integrity1", x = data$cities, type = "integ", y = "ref$cities")
-#' # verify, that all of the cities used in my data are in the reference table
-#'
+#' # verify, that all of the cities used in my data are present in the reference table
 #' }
 
 write_rule <- function(name, x, type, y = NULL, def = "",
                        result = "", na.rm = ""){
+
+      if(!exists("name")){
+            stop("You need to provide a name for your rule.")
+      }
 
       x <- deparse(substitute(x))
 

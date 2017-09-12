@@ -4,7 +4,7 @@
 #' \code{verify} is a function used to verify your defined rules. Can verify several rules at once.
 #'
 #' @usage
-#' verify(name, all = FALSE)
+#' verify(name = NULL, all = FALSE)
 #'
 #' @param name character. Specified name/s of the rule to be removed.
 #'
@@ -25,7 +25,7 @@
 #' verify(name = c("a", "b"))
 #' verify(all = TRUE)
 #' }
-verify <- function(name, all = FALSE){
+verify <- function(name = NULL, all = FALSE){
       suppressPackageStartupMessages(require("data.table"))
 
       rule_set <- local(envir = .verifier, rule_set)
@@ -45,8 +45,17 @@ verify <- function(name, all = FALSE){
             rule <- rule_set[i,]
             x <- eval(parse(text = rule$x))
 
+            if(is.null(x)){
+                  stop(paste("Object", rule$x, "in rule", rule$name , "not found. This usually happens in the case of typo in the column name."))
+            }
+
             if(rule$type == "integ"){
                   y <- eval(parse(text = rule$y))
+
+                  if(is.null(y)){
+                        stop(paste("Object", rule$y, "in rule", rule$name , "not found. This usually happens in the case of typo in the column name."))
+                  }
+
                   unX <- unique(x)
 
                   check <-  unX %in% unique(y)
@@ -87,6 +96,10 @@ verify <- function(name, all = FALSE){
 
                   y <- as.data.table(eval(parse(text = rule$y)))
 
+                  if(is.null(y)){
+                        stop(paste("Object", rule$y, "in rule", rule$name , "not found. This usually happens in the case of typo in the column name."))
+                  }
+
                   if (sum(c("id","value") %in% colnames(y)) == 2) {
                         y <- y[,c("id","value")]
                   } else if(ncol(y) == 2) {
@@ -99,11 +112,17 @@ verify <- function(name, all = FALSE){
 
                   xy$diff <- abs(xy$value.x - xy$value.y)
 
-                  e <- sum(xy$diff == 0)
+                  if(rule$def == ""){
+                        acc <- 0
+                  } else{
+                        acc <- as.numeric(rule$def)
+                  }
+
+                  e <- sum(xy$diff <= acc)
                   f <- length(xy$diff)
                   g <- e/f
 
-                  unsolved[[i]] <- xy[xy$check != 0, c("id","diff")]
+                  unsolved[[i]] <- xy[xy$diff <= acc, c("id","diff")]
                   names(unsolved)[i] <- paste(name[i], "id", sep = "_")
             }
 
@@ -130,9 +149,13 @@ verify <- function(name, all = FALSE){
                   } else {
                         y <- eval(parse(text = rule$y))
 
+                        if(is.null(y)){
+                              stop(paste("Object", rule$y, "in rule", rule$name , "not found. This usually happens in the case of typo in the column name."))
+                        }
+
                         if(rule$na.rm == ""){
                               defX <- fn(x, y)
-                        } else{
+                        } else {
                               defX <- fn(x, y, na.rm = as.logical(rule$na.rm))
                         }
                   }

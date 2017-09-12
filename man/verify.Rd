@@ -4,7 +4,7 @@
 \alias{verify}
 \title{Verifies specfified rules}
 \usage{
-verify(name, all = FALSE)
+verify(name = NULL, all = FALSE)
 }
 \arguments{
 \item{name}{character. Specified name/s of the rule to be removed.}
