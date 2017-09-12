@@ -27,6 +27,10 @@ update_rule <- function(name, update){
 
       rule_set <- local(envir = .verifier, rule_set)
 
+      if(!name %in% rule_set$name){
+            stop(paste0("There is no rule called ", name,"."))
+      }
+
       rule_set[rule_set$name == name, names(update)] <- update
 
       assign("rule_set", rule_set, envir = .verifier)

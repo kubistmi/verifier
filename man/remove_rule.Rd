@@ -4,7 +4,7 @@
 \alias{remove_rule}
 \title{Removes an existing rule}
 \usage{
-remove_rule(name, all = FALSE)
+remove_rule(name = NULL, all = FALSE)
 }
 \arguments{
 \item{name}{character. Specified name/s of the rule to be removed.}

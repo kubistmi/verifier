@@ -4,7 +4,7 @@
 #' \code{remove_rule} is a function to removes the existing rules. Can remove several rules at once.
 #'
 #' @usage
-#' remove_rule(name, all = FALSE)
+#' remove_rule(name = NULL, all = FALSE)
 #'
 #' @param name character. Specified name/s of the rule to be removed.
 #'
@@ -24,11 +24,11 @@
 #' remove_rule(all = TRUE)
 #' # removes all rules
 #' }
-remove_rule <- function(name, all = FALSE){
+remove_rule <- function(name = NULL, all = FALSE){
       rule_set <- local(envir = .verifier, rule_set)
 
       if(all){
-            local(envir =.verifier, {
+            local(envir = .verifier, {
                   rule_set <- data.frame(name = character(), x = character(),
                                          type = character(), y = character(),
                                          def = character(), result = character(),
@@ -36,6 +36,9 @@ remove_rule <- function(name, all = FALSE){
             })
             return(paste("All rules were erased"))
       } else{
+            if(!name %in% rule_set$name){
+                  stop(paste0("There is no rule called ", name,"."))
+            }
             assign("rule_set", rule_set[rule_set$name != name,], envir = .verifier)
 
             return(paste("The rule(s)", name ,"was/were erased"))

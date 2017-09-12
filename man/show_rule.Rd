@@ -4,7 +4,7 @@
 \alias{show_rule}
 \title{Shows existing rule}
 \usage{
-show_rule(name, all = TRUE)
+show_rule(name = NULL, all = FALSE)
 }
 \arguments{
 \item{name}{character. Specified name of the rule to be shown.}
@@ -18,15 +18,15 @@ Returns a data.frame of defined rules.
 \code{show_rule} is a function to show defined rules. Can show all or several rules at once.
 }
 \details{
-To see all the rules, it is enough to use \code{show_rule}, alternatively you can specify the names of the rules to be shown. If all = TRUE (default value) is used, the name parametr name will not be evaluated at all.
+To see all the rules, it is enough to use \code{show_rule}, alternatively you can specify the names of the rules to be shown. If all = TRUE is used, the name parametr name will not be evaluated at all.
 }
 \examples{
 \dontrun{
 show_rule(name = "test1")
 # show rule called "test1"
 
-show_rule()
-# show all rules, equivalent to show_rule(all= TRUE)
+show_rule(all = TRUE)
+# show all rules
 }
 }
 \author{
