@@ -85,11 +85,6 @@ verify <- function(name = NULL, all = FALSE){
                               x[,.(
                                     value = fn(value)
                               ), by = id]
-                        # x %>%
-                        #       group_by(id) %>%
-                        #       summarise(
-                        #             value = fn(value)
-                        #             ) %>% as.data.frame -> agX
                   }else{
                         agX <-
                               x[,.(
