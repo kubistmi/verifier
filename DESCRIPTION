@@ -5,7 +5,7 @@ Version: 0.1.0
 Author: Michal Kubista
 Maintainer: Michal Kubista <kubistmi@gmail.com>
 Description: This package should help you with verifying the structure and content of your data. First step is to define the rules (expectations about your data), the second step is to verify those rules.
-Imports: data.table
+Depends: data.table
 Date: 2017-09-10
 License: GPL
 Encoding: UTF-8
