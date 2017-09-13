@@ -73,21 +73,21 @@ verify <- function(name = NULL, all = FALSE){
 
                   if(sum(c("id","value") %in% colnames(x))==2){
                         x <- x[,c("id","value")]
-                  } else if(ncol(x)==2){
+                  }else if(ncol(x)==2){
                         colnames(x) <- c("id","value")
-                  } else{
+                  }else{
                         stop("x needs to be a data.frame/table object either with columns 'id' and 'value', or with two columns only (in this case, first column is expected to be id and second to contain value")
                   }
 
                   fn <- get(rule$def)
 
-                  if (rule$na.rm == "") {
+                  if(rule$na.rm == ""){
                         agX <-
                               x[,.(
                                     value = fn(value)
                               ), by = id]
 
-                  } else {
+                  }else{
                         agX <-
                               x[,.(
                                     value = fn(value, na.rm = as.logical(rule$na.rm))
@@ -100,11 +100,11 @@ verify <- function(name = NULL, all = FALSE){
                         stop(paste("Object", rule$y, "in rule", rule$name , "not found. This usually happens in the case of typo in the column name."))
                   }
 
-                  if (sum(c("id","value") %in% colnames(y)) == 2) {
+                  if(sum(c("id","value") %in% colnames(y)) == 2){
                         y <- y[,c("id","value")]
-                  } else if(ncol(y) == 2) {
+                  }else if(ncol(y) == 2){
                         colnames(y) <- c("id","value")
-                  } else{
+                  }else{
                         stop("y needs to be a data.frame/table object either with columns 'id' and 'value', or with two columns only (in this case, first column is expected to be id and second to contain value")
                   }
 
@@ -112,10 +112,10 @@ verify <- function(name = NULL, all = FALSE){
 
                   xy$diff <- abs(xy$value.x - xy$value.y)
 
-                  if(rule$def == ""){
+                  if(rule$result == ""){
                         acc <- 0
-                  } else{
-                        acc <- as.numeric(rule$def)
+                  }else{
+                        acc <- as.numeric(rule$result)
                   }
 
                   e <- sum(xy$diff <= acc)
@@ -140,13 +140,13 @@ verify <- function(name = NULL, all = FALSE){
             if(rule$type == "def"){
                   fn <- get(rule$def)
 
-                  if (rule$y == "") {
+                  if(rule$y == ""){
                         if(rule$na.rm == ""){
                               defX <- fn(x)
-                        } else{
+                        }else{
                               defX <- fn(x, na.rm = as.logical(rule$na.rm))
                         }
-                  } else {
+                  }else{
                         y <- eval(parse(text = rule$y))
 
                         if(is.null(y)){
@@ -155,7 +155,7 @@ verify <- function(name = NULL, all = FALSE){
 
                         if(rule$na.rm == ""){
                               defX <- fn(x, y)
-                        } else {
+                        }else{
                               defX <- fn(x, y, na.rm = as.logical(rule$na.rm))
                         }
                   }
@@ -168,7 +168,7 @@ verify <- function(name = NULL, all = FALSE){
 
                         unsolved[[i]] <- which(defX, FALSE)
                         names(unsolved)[i] <- paste(name[i], "index", sep = "_")
-                  } else{
+                  }else{
 
                         e <- defX
                         f <- as.numeric(rule$result)
