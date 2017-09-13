@@ -26,7 +26,6 @@
 #' verify(all = TRUE)
 #' }
 verify <- function(name = NULL, all = FALSE){
-      require("data.table")
 
       rule_set <- local(envir = .verifier, rule_set)
 
@@ -86,7 +85,11 @@ verify <- function(name = NULL, all = FALSE){
                               x[,.(
                                     value = fn(value)
                               ), by = id]
-
+                        # x %>%
+                        #       group_by(id) %>%
+                        #       summarise(
+                        #             value = fn(value)
+                        #             ) %>% as.data.frame -> agX
                   }else{
                         agX <-
                               x[,.(
