@@ -120,7 +120,7 @@ verify <- function(name = NULL, all = FALSE){
                   f <- length(xy$diff)
                   g <- e/f
 
-                  unsolved[[i]] <- xy[xy$diff <= acc, c("id","diff")]
+                  unsolved[[i]] <- xy[xy$diff > acc, c("id","diff")]
                   names(unsolved)[i] <- paste(name[i], "id", sep = "_")
             }
 
