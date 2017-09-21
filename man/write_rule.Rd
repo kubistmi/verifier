@@ -4,7 +4,7 @@
 \alias{write_rule}
 \title{Write new rule to be verified.}
 \usage{
-write_rule(name, x, type, y, def , result, na.rm = "")
+write_rule(name, x, type, y, def , result, na.rm = "", multiple)
 }
 \arguments{
 \item{name}{character. Name of the rule. Needs to be unique for every rule.}
@@ -27,6 +27,8 @@ write_rule(name, x, type, y, def , result, na.rm = "")
 \item{result}{numeric. Used for \code{type} \code{numeric}, \code{def}, or \code{summary} to specify bounds, expected value or accuracy for \code{summary}, check \strong{Details} for more explanation.}
 
 \item{na.rm}{logical or empty (""). Should the \code{NA} values be ommitted in computations of summaries and user defined functions? Empty, if the function does not use na.rm argument (or it should use default value).}
+
+\item{multiple}{logical. Are multiple rules being written? If TRUE, then x (and y, if used) should be the names of the objects (not the objects themself)}
 }
 \value{
 Returns a message confirming the creation of new rule.
@@ -35,7 +37,7 @@ Returns a message confirming the creation of new rule.
 \code{write_rule} is a function to help you write new rules. Can write several rules at once using vectors.
 }
 \details{
-You can create several rules at once assigning vectors into the parametrs. When the \code{length} of any parameter is longer than one the function uses cbind to create a data.frame (will repeat values of vectors with smaller size). Names of the rules need to be unique. \cr
+You can create several rules at once assigning vectors into the parametrs and specifying \code{multiple = TRUE}. When the \code{length} of any parameter is longer than one the function uses cbind to create a data.frame (will repeat values of vectors with smaller size). Names of the rules need to be unique. \cr
 Special requirements:
 \itemize{
  \item{\code{summary} Both \code{x} and \code{y} are expected to be a data.frame/table object either with columns 'id' and 'value', or with two columns only (in this case, first column is expected to be id and second to contain value)}.
@@ -45,12 +47,12 @@ There is a \strong{special use} of parameter \code{result} in case of \code{type
 }
 \examples{
 \dontrun{
-write_rule(name = "test1", x = mtcars$mpg, type = "def", def = c("mean", "median"),
+write_rule(name = "test1", x = mtcars$mpg, type = "def", def = "mean",
            result = 19.2, na.rm = TRUE)
-# verify, that the mean and median of mtcars$mpg is 19.2, omitting the missing values
+# verify, that the mean  of mtcars$mpg is 19.2, omitting the missing values
 
 write_rule(name = "integrity1", x = data$cities, type = "integ", y = "ref$cities")
-# verify, that all of the cities used in my data are present in the reference table
+# verify, that all of the cities used in the data are present in the reference table
 }
 }
 \author{
